@@ -2,7 +2,7 @@
    - Pagina: prima la rete (così gli aggiornamenti arrivano subito), senza rete la copia salvata.
    - Locandine TMDB e caratteri: prima la copia salvata, così si aprono all'istante e anche offline.
    - Nessun dato personale passa di qui: voti e visti restano nella memoria del browser. */
-var VERSIONE = "elenetflix-v2";
+var VERSIONE = "elenetflix-v3";
 var GUSCIO = "guscio-" + VERSIONE;
 var IMMAGINI = "locandine-v1";
 var CARATTERI = "caratteri-v1";
@@ -42,6 +42,8 @@ self.addEventListener("fetch", function (e) {
   if (url.hostname === "image.tmdb.org") { e.respondWith(prima_cache(IMMAGINI, req, MAX_IMMAGINI)); return; }
   if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") { e.respondWith(prima_cache(CARATTERI, req)); return; }
   if (url.origin !== self.location.origin) return;
+  /* video: lo gestisce il browser (richieste a pezzi), senza passare dalla cache */
+  if (url.pathname.indexOf("/media/") !== -1) return;
 
   if (req.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname.endsWith("/")) {
     /* "no-cache": il telefono chiede sempre al sito se c'è una versione nuova (risposta leggera se non è cambiato nulla) */
