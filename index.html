@@ -1093,6 +1093,12 @@ EN.tmdb = (function () {
    - NON si sincronizza con altri dispositivi e può essere cancellata
      dal browser (navigazione privata, pulizia dati del sito).
    - Per trasferire i dati: backup JSON (esporta / importa).
+   Più copie aperte sullo stesso telefono (app installata + scheda del browser)
+   condividono la stessa memoria: ogni salvataggio UNISCE i dati titolo per
+   titolo (vince la modifica più recente) invece di sovrascrivere tutto, così
+   una copia rimasta indietro non cancella le modifiche fatte nell'altra.
+   «Azzera» e «Importa» lasciano un segno temporale (`azzeratoIl`): le voci più
+   vecchie di quel momento, rimaste in copie vecchie, non tornano indietro.
    Interfaccia comune a tutti gli adattatori:
      carica() · impostaVoto(id, voto, quando) · rimuoviVoto(id, quando)
      impostaVisto(id, visto, quando) · sostituisciTutto(stato)
@@ -1102,7 +1108,7 @@ EN.persistenza = EN.persistenza || {};
 
 EN.persistenza.locale = (function () {
   var chiave = EN.config.chiaviLocali.progressi;
-  var memoria = { versione: 1, titoli: {} };
+  var memoria = { versione: 1, titoli: {}, azzeratoIl: null };
   var disponibile = (function () {
     try {
       var k = chiave + ":test";
@@ -1112,9 +1118,43 @@ EN.persistenza.locale = (function () {
     } catch (e) { return false; }
   })();
 
-  function scrivi() {
+  function leggiDisco() {
+    if (!disponibile) return null;
+    try {
+      var raw = localStorage.getItem(chiave);
+      if (!raw) return null;
+      var dati = JSON.parse(raw);
+      return dati && dati.titoli ? dati : null;
+    } catch (e) { return null; }
+  }
+
+  function piuRecente(a, b) {
+    if (!a) return b; if (!b) return a;
+    return (b.aggiornatoIl || "") > (a.aggiornatoIl || "") ? b : a;
+  }
+
+  /* unione titolo per titolo: vince la voce aggiornata più di recente;
+     le voci più vecchie dell'ultimo «Azzera»/«Importa» vengono scartate */
+  function unisci(a, b) {
+    if (!b) return a;
+    var limite = [a.azzeratoIl || "", b.azzeratoIl || ""].sort().pop() || null;
+    var out = { versione: 1, titoli: {}, azzeratoIl: limite };
+    var ids = {};
+    Object.keys(a.titoli || {}).forEach(function (id) { ids[id] = 1; });
+    Object.keys(b.titoli || {}).forEach(function (id) { ids[id] = 1; });
+    Object.keys(ids).forEach(function (id) {
+      var v = piuRecente((a.titoli || {})[id], (b.titoli || {})[id]);
+      if (!v) return;
+      if (limite && (v.aggiornatoIl || "") < limite) return;
+      out.titoli[id] = v;
+    });
+    return out;
+  }
+
+  function scrivi(sostituisci) {
     if (!disponibile) return Promise.resolve(false);
     try {
+      if (!sostituisci) memoria = unisci(memoria, leggiDisco());
       memoria.aggiornatoIl = EN.util.adesso();
       localStorage.setItem(chiave, JSON.stringify(memoria));
       return Promise.resolve(true);
@@ -1124,27 +1164,23 @@ EN.persistenza.locale = (function () {
   }
 
   function voce(id) {
-    if (!memoria.titoli[id]) memoria.titoli[id] = { visto: false, vistoIl: null, voto: null, votoIl: null, aggiornatoIl: null };
-    return memoria.titoli[id];
+    memoria = unisci(memoria, leggiDisco());
+    var v = Object.assign({ visto: false, vistoIl: null, voto: null, votoIl: null, aggiornatoIl: null }, memoria.titoli[id] || {});
+    memoria.titoli[id] = v;
+    return v;
   }
 
   return {
     nome: "locale",
+    chiave: chiave,
     disponibile: disponibile,
     descrizione: disponibile
       ? "Salvato solo in questo browser, su questo dispositivo."
       : "Questo browser non permette il salvataggio: le modifiche durano finché la pagina resta aperta.",
 
+    /* legge (o rilegge) la memoria del dispositivo, unendola a quella in uso */
     carica: function () {
-      if (disponibile) {
-        try {
-          var raw = localStorage.getItem(chiave);
-          if (raw) {
-            var dati = JSON.parse(raw);
-            if (dati && dati.titoli) memoria = dati;
-          }
-        } catch (e) { /* dati illeggibili: si riparte puliti */ }
-      }
+      memoria = unisci(memoria, leggiDisco());
       return Promise.resolve(JSON.parse(JSON.stringify(memoria)));
     },
 
@@ -1163,9 +1199,13 @@ EN.persistenza.locale = (function () {
       return scrivi();
     },
 
+    /* «Importa» e «Azzera»: sostituiscono tutto e lasciano il segno temporale */
     sostituisciTutto: function (stato) {
-      memoria = { versione: 1, titoli: JSON.parse(JSON.stringify(stato.titoli || {})) };
-      return scrivi();
+      var quando = EN.util.adesso();
+      var titoli = JSON.parse(JSON.stringify(stato.titoli || {}));
+      Object.keys(titoli).forEach(function (id) { titoli[id].aggiornatoIl = quando; });
+      memoria = { versione: 1, titoli: titoli, azzeratoIl: quando };
+      return scrivi(true);
     }
   };
 })();
@@ -1240,6 +1280,30 @@ EN.progressi = (function () {
     return stato.titoli[id] || { visto: false, vistoIl: null, voto: null, votoIl: null, aggiornatoIl: null };
   }
 
+  /* stessi dati? (confronto campo per campo, indipendente dall'ordine) */
+  function uguali(a, b) {
+    var ka = Object.keys(a.titoli || {}), kb = Object.keys(b.titoli || {});
+    var tutte = {};
+    ka.concat(kb).forEach(function (k) { tutte[k] = 1; });
+    return Object.keys(tutte).every(function (id) {
+      var x = (a.titoli || {})[id] || {}, y = (b.titoli || {})[id] || {};
+      return !!x.visto === !!y.visto && (x.voto == null ? null : x.voto) === (y.voto == null ? null : y.voto) &&
+        (x.vistoIl || null) === (y.vistoIl || null) && (x.votoIl || null) === (y.votoIl || null);
+    });
+  }
+
+  /* rilegge i dati salvati (es. modificati da un'altra copia aperta dell'app) e aggiorna l'interfaccia */
+  function ricarica() {
+    if (!adattatore) return Promise.resolve(false);
+    return adattatore.carica().then(function (dati) {
+      var nuovo = { titoli: (dati && dati.titoli) || {} };
+      if (uguali(nuovo, stato)) return false;
+      stato = nuovo;
+      notifica({ tipo: "sincronizzato" });
+      return true;
+    }).catch(function () { return false; });
+  }
+
   function notifica(evento) {
     ascoltatori.forEach(function (fn) { try { fn(evento); } catch (e) { console.error(e); } });
   }
@@ -1251,12 +1315,22 @@ EN.progressi = (function () {
     var dopo = Object.assign({}, prima, modifica);
     stato.titoli[id] = dopo;
     notifica(evento);
-    return salva().catch(function (err) {
+    return salva().then(function (r) { ricarica(); return r; }, function (err) {
       stato.titoli[id] = prima;
       notifica({ tipo: "errore", id: id, messaggio: (err && err.messaggio) || "Salvataggio non riuscito." });
       throw err;
     });
   }
+
+  /* un'altra copia aperta ha salvato → aggiorno subito; rientrando nell'app → ricontrollo */
+  try {
+    window.addEventListener("storage", function (e) {
+      if (adattatore && (!e.key || e.key === adattatore.chiave)) ricarica();
+    });
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) ricarica(); });
+    window.addEventListener("pageshow", function (e) { if (e.persisted) ricarica(); });
+    window.addEventListener("focus", function () { ricarica(); });
+  } catch (e) { /* ok */ }
 
   return {
     inizializza: function (ad) {
@@ -1266,6 +1340,8 @@ EN.progressi = (function () {
         notifica({ tipo: "caricato" });
       });
     },
+
+    ricarica: ricarica,
 
     adattatore: function () { return adattatore; },
     di: voce,
@@ -1299,7 +1375,7 @@ EN.progressi = (function () {
       var prima = stato;
       stato = { titoli: JSON.parse(JSON.stringify(nuovo.titoli || {})) };
       notifica({ tipo: "importato" });
-      return adattatore.sostituisciTutto(stato).catch(function (err) {
+      return adattatore.sostituisciTutto(stato).then(function (r) { ricarica(); return r; }, function (err) {
         stato = prima;
         notifica({ tipo: "errore", messaggio: "Importazione non salvata." });
         throw err;
@@ -2810,7 +2886,7 @@ EN.viste.stats = (function () {
     var ad = EN.progressi.adattatore();
     var stato = '<div class="storage-state">' + I(ad.nome === "api" ? "database" : "telefono") +
       "<span><b>" + (ad.nome === "api" ? "Database condiviso attivo." : "Per ora i dati vivono solo su questo dispositivo.") + "</b> " +
-      U.esc(ad.descrizione) + (ad.nome === "api" ? "" : " Voti e titoli visti non passano da un telefono all'altro: per spostarli usa il backup qui sotto. Il database condiviso arriverà con la fase 2.") +
+      U.esc(ad.descrizione) + (ad.nome === "api" ? "" : " Voti e titoli visti non passano da un telefono all'altro: per spostarli usa il backup qui sotto. Su iPhone anche Safari e l'app sulla schermata Home hanno memorie separate. Il database condiviso arriverà con la fase 2.") +
       "</span></div>";
 
     var extra = "";
@@ -3263,6 +3339,11 @@ EN.ui.app = (function () {
     var iniziale = (location.hash || "").replace("#", "");
     if (iniziale === "davedere") iniziale = "maratona";
     vai(EN.viste[iniziale] ? iniziale : "home");
+    /* chiedo al browser di non cancellare mai da solo i dati di EleNetflix */
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) { /* ok */ }
+    if (EN.progressi.adattatore() && EN.progressi.adattatore().disponibile === false) {
+      EN.ui.avviso("Attenzione: in questo browser voti e visti non restano salvati. Apri EleNetflix da Chrome o Safari (non in navigazione privata).", { errore: true, durata: 9000 });
+    }
   }
 
   return { avvia: avvia, vai: vai, segnaVisto: segnaVisto };
