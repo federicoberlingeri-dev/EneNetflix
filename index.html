@@ -1,4 +1,4 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#09080a"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html,body{background:#09080a}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><link rel="manifest" href="manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="EleNetflix"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"><script>window.EN_SITO=true;if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script></head><body>
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#09080a"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html,body{background:#09080a}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><link rel="manifest" href="manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="EleNetflix"><link rel="apple-touch-icon" href="icons/apple-touch-icon-v2.png"><link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32-v2.png"><script>window.EN_SITO=true;if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script></head><body>
 <title>EleNetflix</title>
 <meta name="theme-color" content="#09080a">
 <meta name="description" content="La nostra maratona Marvel verso Avengers: Doomsday">
@@ -655,16 +655,6 @@ button.tile:hover { border-color: var(--dim); }
 .sigla-ridotta .sg-beams, .sigla-ridotta .sg-glow { display: none; }
 .sigla-ridotta .sg-logo { animation: sg-fuoco .5s ease forwards; filter: none; transform: none; }
 
-/* video in coda: entra ed esce in dissolvenza, bordi sfumati nel nero */
-.sg-video { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transition: opacity .6s ease; pointer-events: none; }
-.sg-video.on { opacity: 1; }
-.sg-video video { display: block; width: min(96vw, 62vh, 520px); height: auto; aspect-ratio: 1 / 1; object-fit: cover; background: transparent;
-  -webkit-mask-image: radial-gradient(closest-side, #000 60%, rgba(0, 0, 0, .5) 82%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 60%, rgba(0, 0, 0, .5) 82%, transparent 100%);
-  transform: scale(.94); transition: transform 2.8s cubic-bezier(.2, .8, .2, 1); }
-.sg-video.on video { transform: scale(1); }
-.sigla-ridotta .sg-video video { transform: none; transition: none; }
-
 /* ---------- installazione come app ---------- */
 .install-card { margin: 22px var(--gutter) 0; padding: 16px; border-radius: var(--radius-lg); display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 14px; align-items: center;
   background: linear-gradient(120deg, rgba(226, 19, 47, .22), rgba(9, 8, 10, .1) 70%), var(--surface); border: 1px solid rgba(255, 61, 82, .35); }
@@ -710,11 +700,7 @@ EN.config = {
     preferenze: "elenetflix:preferenze"
   },
 
-  dataObiettivo: "2026-12-16",
-
-  /* video in coda alla sigla (solo sul sito pubblicato, dove esiste il file).
-     Per toglierlo: null (e cancellare media/sigla-video.mp4). */
-  videoSigla: "media/sigla-video.mp4"
+  dataObiettivo: "2026-12-16"
 };
 
 </script>
@@ -2167,8 +2153,6 @@ EN.ui.scheda = (function () {
    Dopo la password: fasci di luce rossi che convergono, il logo che si mette
    a fuoco e un'entrata nello schermo. Suono originale generato al momento
    (Web Audio): parte solo perché segue il tocco su «Entra».
-   In coda (solo sul sito): un breve video che entra ed esce in dissolvenza,
-   con i bordi sfumati nel nero (EN.config.videoSigla; null per toglierlo).
    Un tocco salta tutto. Con «riduci movimento» i fasci spariscono.
    ========================================================================== */
 window.EN = window.EN || {};
@@ -2178,32 +2162,12 @@ EN.ui.sigla = (function () {
   var K_SUONO = "elenetflix:suono";
   var DURATA_LOGO = 3450;          /* fine dell'entrata del logo (ms), in linea con sigla.css */
   var ctx = null;
-  var vid = null, inScena = false;
 
   function suonoAttivo() { try { return localStorage.getItem(K_SUONO) !== "0"; } catch (e) { return true; } }
   function impostaSuono(on) { try { localStorage.setItem(K_SUONO, on ? "1" : "0"); } catch (e) { /* ok */ } }
 
-  function conVideo() { return !!(window.EN_SITO && EN.config && EN.config.videoSigla); }
-
-  /* il video si prepara dentro il tocco su «Entra»: così parte anche su iPhone in risparmio energetico */
-  function preparaVideo() {
-    if (vid || !conVideo()) return;
-    try {
-      vid = document.createElement("video");
-      vid.muted = true; vid.defaultMuted = true; vid.playsInline = true;
-      vid.setAttribute("muted", ""); vid.setAttribute("playsinline", ""); vid.setAttribute("webkit-playsinline", "");
-      vid.setAttribute("aria-hidden", "true");
-      vid.preload = "auto";
-      vid.src = EN.config.videoSigla;
-      vid.load();
-      var p = vid.play();
-      if (p && p.then) p.then(function () { if (!inScena) { vid.pause(); try { vid.currentTime = 0; } catch (e) { /* ok */ } } }).catch(function () {});
-    } catch (e) { vid = null; }
-  }
-
-  /* va chiamata dentro il tocco dell'utente: sblocca l'audio (e il video) sui telefoni */
+  /* va chiamata dentro il tocco dell'utente: sblocca l'audio sui telefoni */
   function prepara() {
-    preparaVideo();
     if (!suonoAttivo()) return;
     try {
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -2279,9 +2243,7 @@ EN.ui.sigla = (function () {
     el.setAttribute("aria-hidden", "true");
     el.innerHTML = '<div class="sg-beams">' + fasci() + "</div>" +
       '<div class="sg-glow"></div>' +
-      '<div class="sg-logo">' + EN.ui.logo() + "</div>" +
-      (vid ? '<div class="sg-video"></div>' : "");
-    if (vid) el.querySelector(".sg-video").appendChild(vid);
+      '<div class="sg-logo">' + EN.ui.logo() + "</div>";
     document.body.appendChild(el);
     suona();
 
@@ -2289,47 +2251,13 @@ EN.ui.sigla = (function () {
     function chiudi() {
       if (chiusa) return;
       chiusa = true;
-      inScena = false;
       el.classList.add("sg-fine");
-      setTimeout(function () {
-        el.remove();
-        if (vid) { try { vid.pause(); vid.currentTime = 0; } catch (e) { /* ok */ } }
-      }, 450);
+      setTimeout(function () { el.remove(); }, 450);
       if (fine) fine();
     }
 
-    /* il video in coda: entra in dissolvenza, esce in dissolvenza, poi la sigla si chiude.
-       Se non è pronto in tempo o non può partire, la sigla si chiude come sempre. */
-    function mostraVideo() {
-      if (chiusa) return;
-      var box = el.querySelector(".sg-video");
-      var avviato = false, uscita = false;
-      function esci() {
-        if (uscita || chiusa) return;
-        uscita = true;
-        box.classList.remove("on");
-        setTimeout(chiudi, 650);
-      }
-      function parti() {
-        if (avviato || chiusa) return;
-        avviato = true;
-        inScena = true;
-        try { vid.currentTime = 0; } catch (e) { /* ok */ }
-        vid.ontimeupdate = function () { if (vid.duration && vid.currentTime >= vid.duration - 0.6) esci(); };
-        vid.onended = esci;
-        var p = vid.play();
-        var visibile = function () { box.classList.add("on"); setTimeout(esci, ((vid.duration || 2.1) + 1.5) * 1000); };
-        if (p && p.then) p.then(visibile).catch(chiudi); else visibile();
-      }
-      if (vid.error) { chiudi(); return; }
-      if (vid.readyState >= 3) { parti(); return; }
-      vid.oncanplay = function () { vid.oncanplay = null; parti(); };
-      vid.onerror = function () { vid.onerror = null; if (!avviato) chiudi(); };
-      setTimeout(function () { if (!avviato) chiudi(); }, 2500);
-    }
-
     el.addEventListener("click", chiudi);
-    setTimeout(function () { if (vid) mostraVideo(); else chiudi(); }, ridotto ? 1400 : DURATA_LOGO);
+    setTimeout(chiudi, ridotto ? 1400 : DURATA_LOGO);
   }
 
   return { prepara: prepara, avvia: avvia, suonoAttivo: suonoAttivo, impostaSuono: impostaSuono };
@@ -2356,7 +2284,7 @@ EN.ui.installa = (function () {
   window.addEventListener("appinstalled", function () { richiesta = null; nascondi(); notifica(); });
 
   function standalone() {
-    return (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+    return (window.matchMedia && (matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches)) || window.navigator.standalone === true;
   }
   function iphone() {
     var ua = navigator.userAgent || "";
@@ -2381,7 +2309,7 @@ EN.ui.installa = (function () {
     if (!disponibile() || (!forza && nascosta())) return "";
     var I = EN.ui.icona;
     return '<section class="install-card" aria-labelledby="inst-h">' +
-      '<img src="icons/icon-192.png" alt="" width="56" height="56">' +
+      '<img src="icons/icon-192-v2.png" alt="" width="56" height="56">' +
       '<div><b id="inst-h">Installa EleNetflix sul telefono</b><p>Un\'icona tutta sua, a schermo intero, come una vera app.</p></div>' +
       '<button class="chiudi" data-installa-chiudi aria-label="Nascondi">' + I("chiudi") + "</button>" +
       (richiesta

@@ -2,11 +2,11 @@
    - Pagina: prima la rete (così gli aggiornamenti arrivano subito), senza rete la copia salvata.
    - Locandine TMDB e caratteri: prima la copia salvata, così si aprono all'istante e anche offline.
    - Nessun dato personale passa di qui: voti e visti restano nella memoria del browser. */
-var VERSIONE = "elenetflix-v3";
+var VERSIONE = "elenetflix-v4";
 var GUSCIO = "guscio-" + VERSIONE;
 var IMMAGINI = "locandine-v1";
 var CARATTERI = "caratteri-v1";
-var FILE_GUSCIO = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
+var FILE_GUSCIO = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192-v2.png", "./icons/icon-512-v2.png", "./icons/apple-touch-icon-v2.png"];
 var MAX_IMMAGINI = 160;
 
 self.addEventListener("install", function (e) {
