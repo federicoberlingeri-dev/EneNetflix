@@ -1,4 +1,4 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><link rel="manifest" href="manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="EleNetflix"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"><script>window.EN_SITO=true;if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script></head><body>
 <title>EleNetflix</title>
 <meta name="theme-color" content="#09080a">
 <meta name="description" content="La nostra maratona Marvel verso Avengers: Doomsday">
@@ -642,6 +642,50 @@ button.tile:hover { border-color: var(--dim); }
 .menu button:hover { background: var(--surface-2); }
 .menu svg { width: 18px; height: 18px; color: var(--muted); }
 .menu-note { padding: 8px 12px; font-size: 12px; color: var(--dim); border-top: 1px solid var(--line); margin-top: 4px; }
+
+/* ==========================================================================
+   EleNetflix · SIGLA D'APERTURA e INSTALLAZIONE
+   ========================================================================== */
+.sigla { position: fixed; inset: 0; z-index: 120; background: #000; overflow: hidden; display: grid; place-items: center; cursor: pointer; }
+.sigla.sg-fine { animation: sg-dissolvi .45s ease forwards; }
+@keyframes sg-dissolvi { to { opacity: 0; visibility: hidden; } }
+
+.sg-beams { position: absolute; inset: 0; }
+.sg-beam { position: absolute; top: 0; bottom: 0; left: calc(50% + var(--x)); width: var(--w); margin-left: calc(var(--w) / -2);
+  background: linear-gradient(180deg, transparent, var(--c) 18%, var(--c) 82%, transparent);
+  box-shadow: 0 0 2vw var(--c); opacity: 0; transform-origin: 50% 50%;
+  animation: sg-fascio 1.05s cubic-bezier(.6, 0, .3, 1) var(--d) forwards; }
+@keyframes sg-fascio {
+  0% { opacity: 0; transform: scaleY(0); }
+  35% { opacity: .95; transform: scaleY(1); }
+  100% { opacity: 0; transform: translateX(calc(var(--x) * -1)) scaleX(.15) scaleY(.35); }
+}
+
+.sg-glow { position: absolute; width: 140vmax; height: 140vmax; left: 50%; top: 50%; margin: -70vmax 0 0 -70vmax; border-radius: 50%;
+  background: radial-gradient(circle, rgba(226, 19, 47, .55), rgba(226, 19, 47, .12) 25%, transparent 45%);
+  opacity: 0; transform: scale(.2); animation: sg-colpo 1.6s ease-out .72s forwards; }
+@keyframes sg-colpo { 0% { opacity: 0; transform: scale(.2); } 15% { opacity: 1; transform: scale(.55); } 100% { opacity: 0; transform: scale(1.1); } }
+
+.sg-logo { position: relative; font-size: min(17vw, 120px); opacity: 0; filter: blur(18px); transform: scale(1.9);
+  animation: sg-fuoco .95s cubic-bezier(.2, .8, .2, 1) .55s forwards, sg-entra .7s cubic-bezier(.7, 0, .9, .4) 1.95s forwards; }
+@keyframes sg-fuoco { to { opacity: 1; filter: blur(0); transform: scale(1); } }
+@keyframes sg-entra { from { opacity: 1; filter: blur(0); transform: scale(1); } to { opacity: 0; filter: blur(6px); transform: scale(7); } }
+.sg-logo .logo { filter: drop-shadow(0 0 24px rgba(255, 61, 82, .55)); }
+
+.sigla-ridotta .sg-beams, .sigla-ridotta .sg-glow { display: none; }
+.sigla-ridotta .sg-logo { animation: sg-fuoco .5s ease forwards; filter: none; transform: none; }
+
+/* ---------- installazione come app ---------- */
+.install-card { margin: 22px var(--gutter) 0; padding: 16px; border-radius: var(--radius-lg); display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  background: linear-gradient(120deg, rgba(226, 19, 47, .22), rgba(9, 8, 10, .1) 70%), var(--surface); border: 1px solid rgba(255, 61, 82, .35); }
+.install-card img { width: 56px; height: 56px; border-radius: 13px; box-shadow: 0 6px 18px rgba(0, 0, 0, .5); }
+.install-card b { display: block; font-size: 15.5px; }
+.install-card p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.install-card .chiudi { width: 36px; height: 36px; display: grid; place-items: center; color: var(--muted); border-radius: 50%; align-self: start; }
+.install-card .chiudi svg { width: 18px; height: 18px; }
+.install-card .azioni { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+.install-passi { grid-column: 1 / -1; margin: 0; padding-left: 20px; list-style: decimal; display: grid; gap: 6px; font-size: 14px; color: #e9e3e4; }
+.install-passi b { display: inline; font-size: inherit; }
 
 </style>
 
@@ -2423,6 +2467,189 @@ EN.ui.scheda = (function () {
 })();
 
 </script>
+<script data-modulo="ui/sigla.js">
+/* ==========================================================================
+   EleNetflix · SIGLA D'APERTURA
+   Dopo la password: fasci di luce rossi che convergono, il logo che si mette
+   a fuoco e un'entrata nello schermo. Suono originale generato al momento
+   (Web Audio): parte solo perché segue il tocco su «Entra».
+   Un tocco la salta. Con «riduci movimento» diventa una semplice dissolvenza.
+   ========================================================================== */
+window.EN = window.EN || {};
+EN.ui = EN.ui || {};
+
+EN.ui.sigla = (function () {
+  var K_SUONO = "elenetflix:suono";
+  var ctx = null;
+
+  function suonoAttivo() { try { return localStorage.getItem(K_SUONO) !== "0"; } catch (e) { return true; } }
+  function impostaSuono(on) { try { localStorage.setItem(K_SUONO, on ? "1" : "0"); } catch (e) { /* ok */ } }
+
+  /* va chiamata dentro il tocco dell'utente: sblocca l'audio sui telefoni */
+  function prepara() {
+    if (!suonoAttivo()) return;
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!ctx) ctx = new AC();
+      if (ctx.state === "suspended") ctx.resume();
+      /* un istante di silenzio sblocca iOS */
+      var b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource();
+      s.buffer = b; s.connect(ctx.destination); s.start(0);
+    } catch (e) { ctx = null; }
+  }
+
+  function suona() {
+    if (!ctx || !suonoAttivo()) return;
+    try {
+      var t0 = ctx.currentTime + 0.03;
+      var master = ctx.createGain();
+      master.gain.value = 0.85;
+      var comp = ctx.createDynamicsCompressor();
+      master.connect(comp); comp.connect(ctx.destination);
+
+      /* 1 · fruscio che sale mentre i fasci si accendono */
+      var dur = 0.8, n = Math.floor(ctx.sampleRate * dur);
+      var buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1);
+      var rumore = ctx.createBufferSource(); rumore.buffer = buf;
+      var bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.2;
+      bp.frequency.setValueAtTime(300, t0); bp.frequency.exponentialRampToValueAtTime(4200, t0 + dur);
+      var gr = ctx.createGain();
+      gr.gain.setValueAtTime(0.0001, t0); gr.gain.exponentialRampToValueAtTime(0.35, t0 + dur * 0.9); gr.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      rumore.connect(bp); bp.connect(gr); gr.connect(master);
+      rumore.start(t0); rumore.stop(t0 + dur);
+
+      /* 2 · colpo profondo quando il logo va a fuoco */
+      var tc = t0 + 0.78;
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(92, tc); o.frequency.exponentialRampToValueAtTime(34, tc + 1.8);
+      g.gain.setValueAtTime(0.0001, tc); g.gain.exponentialRampToValueAtTime(1, tc + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, tc + 2.4);
+      o.connect(g); g.connect(master); o.start(tc); o.stop(tc + 2.5);
+
+      /* 3 · accordo luminoso che si apre (re minore con nona) */
+      [146.83, 220, 293.66, 349.23, 659.25].forEach(function (f, k) {
+        var os = ctx.createOscillator(), gg = ctx.createGain();
+        os.type = k < 2 ? "sawtooth" : "triangle";
+        os.frequency.setValueAtTime(f, tc);
+        os.detune.setValueAtTime((k % 2 ? 6 : -6), tc);
+        var lp = ctx.createBiquadFilter(); lp.type = "lowpass";
+        lp.frequency.setValueAtTime(600, tc); lp.frequency.exponentialRampToValueAtTime(3200, tc + 1.4);
+        var picco = k < 2 ? 0.06 : 0.05;
+        gg.gain.setValueAtTime(0.0001, tc); gg.gain.exponentialRampToValueAtTime(picco, tc + 0.5); gg.gain.exponentialRampToValueAtTime(0.0001, tc + 2.6);
+        os.connect(lp); lp.connect(gg); gg.connect(master);
+        os.start(tc); os.stop(tc + 2.7);
+      });
+    } catch (e) { /* senza audio la sigla resta comunque */ }
+  }
+
+  function fasci() {
+    var colori = ["#e2132f", "#ff3d52", "#b30f26", "#ff7a8a", "#e2132f", "#7a0614", "#ff3d52", "#c41430", "#ff5a6b", "#e2132f", "#9e0c22", "#ff3d52"];
+    var h = "";
+    for (var i = 0; i < colori.length; i++) {
+      var x = ((i + 0.5) / colori.length - 0.5) * 100;      /* distanza dal centro, in % */
+      var w = [3, 1.2, 5, 0.8, 2.2, 6, 1.5, 3.5, 0.9, 4, 2.6, 1.1][i];
+      h += '<span class="sg-beam" style="--x:' + x.toFixed(1) + 'vw;--w:' + w + 'vw;--c:' + colori[i] + ';--d:' + (Math.abs(x) * 0.004).toFixed(3) + 's"></span>';
+    }
+    return h;
+  }
+
+  function avvia(fine) {
+    var ridotto = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var el = document.createElement("div");
+    el.className = "sigla" + (ridotto ? " sigla-ridotta" : "");
+    el.setAttribute("aria-hidden", "true");
+    el.innerHTML = '<div class="sg-beams">' + fasci() + "</div>" +
+      '<div class="sg-glow"></div>' +
+      '<div class="sg-logo">' + EN.ui.logo() + "</div>";
+    document.body.appendChild(el);
+    suona();
+    var chiusa = false;
+    function chiudi() {
+      if (chiusa) return;
+      chiusa = true;
+      el.classList.add("sg-fine");
+      setTimeout(function () { el.remove(); }, 450);
+      if (fine) fine();
+    }
+    el.addEventListener("click", chiudi);
+    setTimeout(chiudi, ridotto ? 1100 : 2650);
+  }
+
+  return { prepara: prepara, avvia: avvia, suonoAttivo: suonoAttivo, impostaSuono: impostaSuono };
+})();
+
+</script>
+<script data-modulo="ui/installa.js">
+/* ==========================================================================
+   EleNetflix · INSTALLAZIONE COME APP
+   Solo sul sito pubblicato (window.EN_SITO). Su Android il browser offre
+   l'installazione vera e propria; su iPhone si aggiunge alla schermata Home.
+   ========================================================================== */
+window.EN = window.EN || {};
+EN.ui = EN.ui || {};
+
+EN.ui.installa = (function () {
+  var K_NASCOSTA = "elenetflix:install:nascosta";
+  var richiesta = null;
+  var ascoltatori = [];
+
+  function notifica() { ascoltatori.forEach(function (fn) { try { fn(); } catch (e) { /* ok */ } }); }
+
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); richiesta = e; notifica(); });
+  window.addEventListener("appinstalled", function () { richiesta = null; nascondi(); notifica(); });
+
+  function standalone() {
+    return (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+  function iphone() {
+    var ua = navigator.userAgent || "";
+    return /iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+  function nascosta() { try { return localStorage.getItem(K_NASCOSTA) === "1"; } catch (e) { return false; } }
+  function nascondi() { try { localStorage.setItem(K_NASCOSTA, "1"); } catch (e) { /* ok */ } }
+  function disponibile() { return !!window.EN_SITO && !standalone(); }
+
+  function passi() {
+    if (iphone()) {
+      return '<ol class="install-passi"><li>Apri questa pagina con <b>Safari</b>.</li>' +
+        "<li>Tocca <b>Condividi</b> (il quadrato con la freccia in su).</li>" +
+        "<li>Scegli <b>Aggiungi alla schermata Home</b>, poi <b>Aggiungi</b>.</li></ol>";
+    }
+    return '<ol class="install-passi"><li>Apri il menu del browser <b>⋮</b> in alto a destra.</li>' +
+      "<li>Tocca <b>Installa app</b> (o <b>Aggiungi a schermata Home</b>).</li>" +
+      "<li>Conferma: l'icona di EleNetflix compare tra le app.</li></ol>";
+  }
+
+  function scheda(forza) {
+    if (!disponibile() || (!forza && nascosta())) return "";
+    var I = EN.ui.icona;
+    return '<section class="install-card" aria-labelledby="inst-h">' +
+      '<img src="icons/icon-192.png" alt="" width="56" height="56">' +
+      '<div><b id="inst-h">Installa EleNetflix sul telefono</b><p>Un\'icona tutta sua, a schermo intero, come una vera app.</p></div>' +
+      '<button class="chiudi" data-installa-chiudi aria-label="Nascondi">' + I("chiudi") + "</button>" +
+      (richiesta
+        ? '<div class="azioni"><button class="btn btn-red btn-small" data-installa>' + I("scarica") + "Installa l'app</button></div>"
+        : passi()) +
+      "</section>";
+  }
+
+  function avvia() {
+    if (!richiesta) return Promise.resolve(false);
+    var r = richiesta;
+    r.prompt();
+    return r.userChoice.then(function (scelta) {
+      richiesta = null;
+      notifica();
+      return scelta && scelta.outcome === "accepted";
+    });
+  }
+
+  return { disponibile: disponibile, scheda: scheda, avvia: avvia, nascondi: nascondi, ascolta: function (fn) { ascoltatori.push(fn); }, standalone: standalone };
+})();
+
+</script>
 <script data-modulo="ui/views/home.js">
 /* ==========================================================================
    EleNetflix · HOME
@@ -2512,7 +2739,7 @@ EN.viste.home = (function () {
     var visti = cat.filter(function (t) { return EN.progressi.visto(t.id); });
     var pref = EN.stats.preferiti();
 
-    var html = '<section class="home-block" aria-labelledby="h-maratona">' +
+    var html = EN.ui.installa.scheda() + '<section class="home-block" aria-labelledby="h-maratona">' +
       '<div class="sec-head"><h2 class="sec-title" id="h-maratona">Avanzamento</h2><button class="sec-more" data-go="maratona">Ordine di visione ›</button></div>' +
       avanzamento(r, prossimo) + "</section>";
 
@@ -3256,12 +3483,20 @@ EN.ui.ingresso = (function () {
       e.preventDefault();
       var valore = input.value;
       if (!valore.trim()) { err.textContent = "Scrivi la password per entrare."; field.classList.add("err"); input.focus(); return; }
+      /* sblocco l'audio adesso, dentro il tocco: la sigla potrà suonare */
+      if (EN.ui.sigla) EN.ui.sigla.prepara();
       EN.accesso.entra(valore).then(function (ok) {
         if (ok) {
           input.blur();
-          quandoEntra();
-          login.classList.add("leaving");
-          setTimeout(function () { radice.innerHTML = ""; radice.hidden = true; }, 720);
+          if (EN.ui.sigla) {
+            EN.ui.sigla.avvia();
+            quandoEntra();
+            radice.innerHTML = ""; radice.hidden = true;
+          } else {
+            quandoEntra();
+            login.classList.add("leaving");
+            setTimeout(function () { radice.innerHTML = ""; radice.hidden = true; }, 720);
+          }
         } else {
           err.textContent = MESSAGGI[Math.min(tentativi, MESSAGGI.length - 1)];
           tentativi++;
@@ -3404,6 +3639,8 @@ EN.ui.app = (function () {
     if (r.innerHTML) { chiudiMenu(); return; }
     r.innerHTML = '<div class="menu" role="menu">' +
       '<button role="menuitem" data-go="voti">' + I("voti") + "Le mie valutazioni</button>" +
+      (EN.ui.installa.disponibile() ? '<button role="menuitem" data-installa-mostra>' + I("telefono") + "Installa l'app sul telefono</button>" : "") +
+      '<button role="menuitem" data-suono>' + I("play") + "Suono della sigla: " + (EN.ui.sigla.suonoAttivo() ? "acceso" : "spento") + "</button>" +
       '<button role="menuitem" data-dati="locandine">' + I("carica") + "Locandine</button>" +
       '<button role="menuitem" data-dati="dati">' + I("database") + "Dati e backup</button>" +
       '<button role="menuitem" data-esci>' + I("esci") + "Esci da EleNetflix</button>" +
@@ -3437,6 +3674,24 @@ EN.ui.app = (function () {
         return;
       }
       if (e.target.closest("[data-continua]")) { EN.ui.scheda.apri(EN.stats.prossimo().id); return; }
+      if (e.target.closest("[data-installa]")) {
+        EN.ui.installa.avvia().then(function (ok) { if (ok) EN.ui.avviso("EleNetflix è tra le tue app"); });
+        return;
+      }
+      if (e.target.closest("[data-installa-chiudi]")) { EN.ui.installa.nascondi(); suCambio(); return; }
+      if (e.target.closest("[data-installa-mostra]")) {
+        try { localStorage.removeItem("elenetflix:install:nascosta"); } catch (x) { /* ok */ }
+        vai("home");
+        setTimeout(function () { var c = document.querySelector(".install-card"); if (c) c.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80);
+        return;
+      }
+      if (e.target.closest("[data-suono]")) {
+        var on = !EN.ui.sigla.suonoAttivo();
+        EN.ui.sigla.impostaSuono(on);
+        chiudiMenu();
+        EN.ui.avviso("Suono della sigla " + (on ? "acceso" : "spento"));
+        return;
+      }
       if (e.target.closest("[data-cerca]")) { vai("maratona", { cerca: true }); return; }
       if ((b = e.target.closest("[data-scroll]"))) { scorriFila(b); return; }
       if ((b = e.target.closest("[data-dati]"))) {
@@ -3470,6 +3725,7 @@ EN.ui.app = (function () {
     eventi(app);
     EN.progressi.ascolta(suCambio);
     EN.locandine.ascolta(function () { suCambio(); });
+    EN.ui.installa.ascolta(function () { if (vista === "home") suCambio(); });
     /* durante il recupero aggiorno solo il pannello delle locandine; a fine recupero ridisegno tutto */
     EN.tmdb.ascolta(function () {
       var s = EN.tmdb.stato();
