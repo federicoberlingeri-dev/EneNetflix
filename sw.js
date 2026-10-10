@@ -2,7 +2,7 @@
    - Pagina: prima la rete (così gli aggiornamenti arrivano subito), senza rete la copia salvata.
    - Locandine TMDB e caratteri: prima la copia salvata, così si aprono all'istante e anche offline.
    - Nessun dato personale passa di qui: voti e visti restano nella memoria del browser. */
-var VERSIONE = "elenetflix-v1";
+var VERSIONE = "elenetflix-v2";
 var GUSCIO = "guscio-" + VERSIONE;
 var IMMAGINI = "locandine-v1";
 var CARATTERI = "caratteri-v1";
@@ -44,7 +44,8 @@ self.addEventListener("fetch", function (e) {
   if (url.origin !== self.location.origin) return;
 
   if (req.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname.endsWith("/")) {
-    e.respondWith(fetch(req).then(function (r) {
+    /* "no-cache": il telefono chiede sempre al sito se c'è una versione nuova (risposta leggera se non è cambiato nulla) */
+    e.respondWith(fetch(req, { cache: "no-cache" }).then(function (r) {
       var copia = r.clone();
       caches.open(GUSCIO).then(function (c) { c.put("./index.html", copia); });
       return r;
@@ -53,5 +54,9 @@ self.addEventListener("fetch", function (e) {
     }));
     return;
   }
-  e.respondWith(caches.match(req).then(function (r) { return r || fetch(req); }));
+  /* icone e manifest: prima la rete, così un'icona nuova arriva; senza rete la copia salvata */
+  e.respondWith(fetch(req, { cache: "no-cache" }).then(function (r) {
+    if (r && r.ok) { var copia = r.clone(); caches.open(GUSCIO).then(function (c) { c.put(req, copia); }); }
+    return r;
+  }).catch(function () { return caches.match(req); }));
 });

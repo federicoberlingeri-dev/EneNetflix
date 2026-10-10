@@ -1,11 +1,10 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><link rel="manifest" href="manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="EleNetflix"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"><script>window.EN_SITO=true;if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script></head><body>
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#09080a"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html,body{background:#09080a}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><link rel="manifest" href="manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="EleNetflix"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"><script>window.EN_SITO=true;if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script></head><body>
 <title>EleNetflix</title>
 <meta name="theme-color" content="#09080a">
 <meta name="description" content="La nostra maratona Marvel verso Avengers: Doomsday">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://image.tmdb.org">
-<link rel="preconnect" href="https://api.themoviedb.org">
 <!-- un foglio per famiglia: se uno non risponde, gli altri caricano comunque -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@700;800;900&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&display=swap">
@@ -182,6 +181,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .cv-year { display: block; margin-top: 3cqw; font: 700 6cqw/1 var(--f-body); letter-spacing: .2em; opacity: .7; }
 .cover img.cv-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; opacity: 0; transition: opacity .4s; }
 .cover img.cv-poster.ok { opacity: 1; }
+.cover img.cv-poster.subito, .cover img.cv-poster.subito ~ .cv-tag { transition: none; }
 .cover img.cv-poster:not(.ok) ~ .cv-tag { opacity: 0; }
 .cv-tag { position: absolute; z-index: 3; transition: opacity .3s; top: 4cqw; left: 4cqw; padding: 1.6cqw 3cqw 1.2cqw; border-radius: 2cqw;
   background: rgba(9, 8, 10, .8); color: #fff; font: 900 10cqw/1 var(--f-display); letter-spacing: .02em; }
@@ -260,6 +260,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   background: rgba(13, 12, 15, .97); border-top: 1px solid var(--line);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 }
+/* il fondo della barra continua oltre il bordo inferiore: nessuna striscia chiara sotto, su nessun telefono */
+.tabbar::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 160px; background: #0d0c0f; pointer-events: none; }
 .tabbar-in { height: var(--tab-h); display: grid; grid-template-columns: repeat(5, 1fr); }
 .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--dim);
   font-size: 10.5px; font-weight: 600; letter-spacing: .01em; position: relative; min-width: 0; }
@@ -494,24 +496,7 @@ button.tile:hover { border-color: var(--dim); }
 .storage-state svg { width: 20px; height: 20px; flex: none; color: var(--gold); margin-top: 1px; }
 .storage-state b { color: var(--fg); }
 .panel textarea { width: 100%; min-height: 140px; padding: 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font: 12px/1.45 ui-monospace, "SFMono-Regular", Menlo, monospace; color: var(--fg); resize: vertical; }
-.panel-sub { font-size: 15px; font-weight: 700; margin-top: 4px; }
-.text-in { width: 100%; height: 48px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: 16px; outline: none; }
-.text-in:focus { border-color: var(--dim); }
-.howto { font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
-.howto summary { cursor: pointer; font-weight: 600; color: var(--fg); padding: 4px 0; }
-.howto ol { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; list-style: decimal; }
-.howto p { margin-top: 8px; font-size: 13px; }
-.tmdb-list { font-size: 13px; }
-.tmdb-list .ok { color: var(--seen); font-weight: 600; }
-.tmdb-list .ko { color: #ff9aa5; }
-.tmdb-list .dim { color: var(--dim); }
 .home-credits { margin-top: 28px; }
-.loc-preview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 8px; }
-@media (min-width: 560px) { .loc-preview { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } }
-.loc-preview figure { margin: 0; min-width: 0; display: grid; gap: 4px; }
-.loc-preview img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 5px; background: var(--surface); }
-.loc-preview figcaption { font-size: 11.5px; color: var(--muted); line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.loc-preview figcaption b { color: var(--fg); }
 .confirm-box { padding: 14px; border-radius: 10px; border: 1px solid rgba(226, 19, 47, .5); background: rgba(226, 19, 47, .08); display: grid; gap: 10px; font-size: 14px; }
 .msg-err { color: #ff9aa5; font-size: 14px; }
 .msg-ok { color: var(--seen); font-size: 14px; }
@@ -556,11 +541,6 @@ button.tile:hover { border-color: var(--dim); }
 .seen-when { font-size: 13px; color: var(--muted); text-align: center; }
 .lock-note { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 12px; background: rgba(14, 122, 85, .16); border: 1px solid rgba(94, 230, 160, .25); color: #d8fff0; font-size: 14px; }
 .lock-note svg { width: 20px; height: 20px; flex: none; }
-.poster-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; color: var(--dim); }
-.poster-row > span:first-child { display: inline-flex; align-items: center; gap: 6px; }
-.poster-row svg { width: 16px; height: 16px; }
-.poster-actions { display: inline-flex; gap: 14px; }
-.poster-actions .link-btn { font-size: 13px; cursor: pointer; }
 .sheet-nav { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; padding-top: 4px; border-top: 1px solid var(--line); }
 .sheet-nav button { display: flex; align-items: center; gap: 4px; min-width: 0; padding: 14px 4px 4px; font-size: 13px; font-weight: 600; color: var(--muted); text-align: left; }
 .sheet-nav button:last-child { justify-content: flex-end; text-align: right; }
@@ -786,15 +766,14 @@ EN.util = (function () {
     return base + (t.animazione ? " d'animazione" : "");
   }
 
-  /* Scala delle parole, dal voto più basso al più alto:
-     1–2 · 2,5–3,5 · 4–4,5 · 5–5,5 · 6–6,5 · 7–7,5 · 8–9 · 9,5–10 */
+  /* Scala delle parole, dal voto più basso al più alto (7 parole sui 19 voti possibili):
+     1–2 · 2,5–3,5 · 4–5 · 5,5–6,5 · 7–8 · 8,5–9 · 9,5–10 */
   var PAROLE = [
     [2, "Ma devo rispondere?"],
-    [3.5, "Estremamente boh"],
-    [4.5, "Molto boh"],
-    [5.5, "Boh"],
+    [3.5, "Molto boh"],
+    [5, "Boh"],
     [6.5, "Ci sta"],
-    [7.5, "Bellino"],
+    [8, "Bellino"],
     [9, "Bellissimo"],
     [10, "My saddle's waitin', jump on it"]
   ];
@@ -1064,152 +1043,44 @@ EN.catalogo.titoli.forEach(function (t) {
 <script data-modulo="data/tmdb.js">
 /* ==========================================================================
    EleNetflix · LOCANDINE DA TMDB (The Movie Database)
-   - Ogni titolo del catalogo ha il suo `tmdb.id` verificato.
-   - Le locandine si scelgono così: prima italiano, poi inglese, poi senza testo;
-     a parità di lingua vince quella più votata su TMDB.
-   - Per le serie si usa la locandina della stagione giusta (es. Loki S2).
-   - La chiave API NON è nel codice: si inserisce nell'app e resta solo
-     nella memoria del dispositivo. I percorsi trovati (non segreti) restano
-     in cache e possono essere fissati nel catalogo (`tmdbPoster`).
+   Ogni titolo del catalogo ha la sua locandina ufficiale già fissata
+   (`tmdbPoster`, italiano quando disponibile). Le immagini arrivano
+   direttamente da image.tmdb.org: nessuna chiave, nessun caricamento a mano.
    Attribuzione richiesta da TMDB: vedi EN.tmdb.attribuzione.
    ========================================================================== */
 window.EN = window.EN || {};
 
 EN.tmdb = (function () {
-  var API = "https://api.themoviedb.org/3";
   var IMG = "https://image.tmdb.org/t/p/";
-  var K_CHIAVE = "elenetflix:tmdb:chiave";
-  var K_CACHE = "elenetflix:tmdb:locandine:v1";
-  var ascoltatori = [];
-  var cache = leggi(K_CACHE) || {};          /* id → { p: "/x.jpg" | null, l: "it" | "en" | null, t: data } */
-  var stato = { fase: "riposo", fatti: 0, totale: 0, errore: "" };
 
-  function leggi(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
-  function scrivi(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
-  function notifica() { ascoltatori.forEach(function (fn) { try { fn(); } catch (e) { console.error(e); } }); }
+  /* pulizia delle versioni precedenti: chiave, elenco in cache e immagini caricate a mano non servono più */
+  try {
+    localStorage.removeItem("elenetflix:tmdb:chiave");
+    localStorage.removeItem("elenetflix:tmdb:locandine:v1");
+  } catch (e) { /* ok */ }
+  try { if (window.indexedDB) indexedDB.deleteDatabase("elenetflix"); } catch (e) { /* ok */ }
 
-  function chiave() { try { return (localStorage.getItem(K_CHIAVE) || "").trim(); } catch (e) { return ""; } }
-
-  function richiesta(percorso) {
-    var k = chiave();
-    var url = API + percorso;
-    var opz = { headers: { accept: "application/json" } };
-    /* token v4 ("eyJ…") nell'intestazione, chiave v3 nell'indirizzo */
-    if (/^eyJ/.test(k)) opz.headers.Authorization = "Bearer " + k;
-    else url += (url.indexOf("?") > -1 ? "&" : "?") + "api_key=" + encodeURIComponent(k);
-    return fetch(url, opz).then(function (r) {
-      if (r.status === 401) throw { codice: "chiave" };
-      if (r.status === 404) return { posters: [] };
-      if (!r.ok) throw { codice: "http", stato: r.status };
-      return r.json();
-    }, function () { throw { codice: "rete" }; });
-  }
-
-  var ORDINE = { it: 0, en: 1 };
-  function scegli(posters) {
-    var lista = (posters || []).filter(function (p) { return p && p.file_path && (!p.width || p.width >= 500); });
-    if (!lista.length) lista = (posters || []).filter(function (p) { return p && p.file_path; });
-    lista.sort(function (a, b) {
-      var la = a.iso_639_1 in ORDINE ? ORDINE[a.iso_639_1] : 2;
-      var lb = b.iso_639_1 in ORDINE ? ORDINE[b.iso_639_1] : 2;
-      return la - lb || (b.vote_average || 0) - (a.vote_average || 0) || (b.vote_count || 0) - (a.vote_count || 0);
-    });
-    return lista[0] || null;
-  }
-
-  var LINGUE = "?include_image_language=it,en,null";
-  function cercaUno(t) {
-    var m = t.tmdb;
-    var principale = m.media === "tv"
-      ? "/tv/" + m.id + "/season/" + (m.stagione || 1) + "/images" + LINGUE
-      : "/movie/" + m.id + "/images" + LINGUE;
-    return richiesta(principale).then(function (d) {
-      var p = scegli(d.posters);
-      if (p || m.media !== "tv") return p;
-      return richiesta("/tv/" + m.id + "/images" + LINGUE).then(function (d2) { return scegli(d2.posters); });
-    }).then(function (p) {
-      cache[t.id] = { p: p ? p.file_path : null, l: p ? (p.iso_639_1 || null) : null, t: new Date().toISOString() };
-      scrivi(K_CACHE, cache);
-    });
-  }
-
-  function percorso(t) {
-    if (t.tmdbPoster) return t.tmdbPoster;
-    var c = cache[t.id];
-    return c && c.p ? c.p : null;
-  }
-
-  /* immagini caricate / rifiutate in questa pagina (per spiegare se il posto le blocca) */
+  /* locandine già arrivate in questa pagina: ridisegnando, si mostrano subito senza dissolvenza */
+  var pronte = {};
   var immagini = { ok: 0, ko: 0 };
+
+  function percorso(t) { return t.tmdbPoster || null; }
 
   return {
     attribuzione: "Questo prodotto usa l'API di TMDB ma non è approvato né certificato da TMDB.",
-    segna: function (riuscita) { if (riuscita) immagini.ok++; else immagini.ko++; },
-    bloccate: function () { return immagini.ok === 0 && immagini.ko > 0; },
-    tutteFissate: function () { return EN.catalogo.titoli.every(function (t) { return !!t.tmdbPoster; }); },
-    ha: function () { return !!chiave(); },
-    chiaveMascherata: function () { var k = chiave(); return k ? k.slice(0, 4) + "…" + k.slice(-4) : ""; },
-    impostaChiave: function (k) {
-      try { if (k) localStorage.setItem(K_CHIAVE, k.trim()); else localStorage.removeItem(K_CHIAVE); } catch (e) { /* ok */ }
-      stato = { fase: "riposo", fatti: 0, totale: 0, errore: "" };
-      notifica();
-    },
-    stato: function () { return stato; },
-    ascolta: function (fn) { ascoltatori.push(fn); },
     percorso: percorso,
-    lingua: function (t) { var c = cache[t.id]; return t.tmdbPoster ? "fissata" : c ? c.l : undefined; },
-    cercato: function (t) { return !!t.tmdbPoster || !!cache[t.id]; },
     url: function (t, misura) { var p = percorso(t); return p ? IMG + (misura || "w500") + p : null; },
     srcset: function (t) {
       var p = percorso(t);
       return p ? [IMG + "w342" + p + " 342w", IMG + "w500" + p + " 500w", IMG + "w780" + p + " 780w"].join(", ") : "";
     },
-    conta: function () { return EN.catalogo.titoli.filter(function (t) { return !!percorso(t); }).length; },
-    mancanti: function () { return EN.catalogo.titoli.filter(function (t) { return !percorso(t); }); },
-
-    /* recupera le locandine non ancora in cache (o tutte con forza = true) */
-    risolvi: function (forza) {
-      if (!chiave() || stato.fase === "in corso") return Promise.resolve(stato);
-      var da = EN.catalogo.titoli.filter(function (t) { return !t.tmdbPoster && (forza || !cache[t.id]); });
-      if (!da.length) { stato = { fase: "fatto", fatti: 0, totale: 0, errore: "" }; notifica(); return Promise.resolve(stato); }
-      stato = { fase: "in corso", fatti: 0, totale: da.length, errore: "" };
-      notifica();
-      var coda = da.slice(), fermo = null;
-      function lavoratore() {
-        if (fermo || !coda.length) return Promise.resolve();
-        var t = coda.shift();
-        return cercaUno(t).catch(function (e) {
-          if (e && (e.codice === "chiave" || e.codice === "rete")) fermo = e;
-        }).then(function () { stato.fatti++; notifica(); return lavoratore(); });
-      }
-      return Promise.all([lavoratore(), lavoratore(), lavoratore(), lavoratore()]).then(function () {
-        if (fermo && fermo.codice === "chiave") stato = { fase: "errore", fatti: stato.fatti, totale: stato.totale, errore: "La chiave TMDB non è valida. Ricontrollala e salvala di nuovo." };
-        else if (fermo) stato = { fase: "errore", fatti: stato.fatti, totale: stato.totale, errore: "Questa pagina non riesce a contattare TMDB. Su claude.ai le immagini e le richieste esterne sono bloccate: apri EleNetflix dal sito pubblicato." };
-        else stato = { fase: "fatto", fatti: stato.fatti, totale: stato.totale, errore: "" };
-        notifica();
-        return stato;
-      });
+    /* chiamata da onload / onerror dell'immagine */
+    segna: function (img, riuscita) {
+      if (riuscita) { immagini.ok++; if (img && img.dataset.p) pronte[img.dataset.p] = true; }
+      else immagini.ko++;
     },
-
-    /* elenco dei percorsi trovati: non contiene la chiave, si può condividere */
-    esportaElenco: function () {
-      var out = {};
-      EN.catalogo.titoli.forEach(function (t) { var p = percorso(t); if (p) out[t.id] = p; });
-      return out;
-    },
-    importaElenco: function (mappa) {
-      var n = 0;
-      Object.keys(mappa || {}).forEach(function (id) {
-        var p = mappa[id];
-        if (typeof p === "string" && /^\/[A-Za-z0-9_-]+\.(jpg|png)$/.test(p) && EN.stats.perId(id)) {
-          cache[id] = { p: p, l: (cache[id] && cache[id].l) || null, t: new Date().toISOString() }; n++;
-        }
-      });
-      scrivi(K_CACHE, cache);
-      notifica();
-      return n;
-    },
-    svuotaCache: function () { cache = {}; scrivi(K_CACHE, cache); notifica(); }
+    pronta: function (t) { var p = percorso(t); return !!(p && pronte[p]); },
+    bloccate: function () { return immagini.ok === 0 && immagini.ko > 0; }
   };
 })();
 
@@ -1455,12 +1326,11 @@ EN.backup = (function () {
   var U = EN.util;
   var FORMATO = "elenetflix-backup";
 
-  /* locandine: { id: dataURL } facoltativo (versione 2 del formato) */
-  function crea(locandine) {
+  function crea() {
     var cat = EN.catalogo.titoli;
     var out = {
       formato: FORMATO,
-      versione: locandine ? 2 : 1,
+      versione: 1,
       app: EN.config.app,
       esportatoIl: U.adesso(),
       origine: "Fase 1 · memoria del browser (" + EN.progressi.adattatore().nome + ")",
@@ -1474,8 +1344,6 @@ EN.backup = (function () {
         };
       })
     };
-    if (locandine) out.locandine = locandine;
-    if (EN.tmdb) out.locandineTmdb = EN.tmdb.esportaElenco();   /* solo percorsi, nessuna chiave */
     return out;
   }
 
@@ -1507,178 +1375,11 @@ EN.backup = (function () {
       if (r.visto) visti++;
       if (voto != null) voti++;
     });
-    var locandine = {};
-    if (dati.locandine && typeof dati.locandine === "object") {
-      Object.keys(dati.locandine).forEach(function (id) {
-        var v = dati.locandine[id];
-        if (validi[id] && typeof v === "string" && /^data:image\//.test(v)) locandine[id] = v;
-      });
-    }
-    return { stato: { titoli: titoli }, visti: visti, voti: voti, ignorati: ignorati, esportatoIl: dati.esportatoIl,
-      locandine: locandine, nLocandine: Object.keys(locandine).length,
-      locandineTmdb: (dati.locandineTmdb && typeof dati.locandineTmdb === "object") ? dati.locandineTmdb : null };
+    /* eventuali locandine nei backup delle versioni precedenti vengono ignorate */
+    return { stato: { titoli: titoli }, visti: visti, voti: voti, ignorati: ignorati, esportatoIl: dati.esportatoIl };
   }
 
   return { crea: crea, nomeFile: nomeFile, analizza: analizza };
-})();
-
-</script>
-<script data-modulo="store/locandine.js">
-/* ==========================================================================
-   EleNetflix · LOCANDINE CARICATE DAL TELEFONO
-   Le immagini scelte dall'utente vengono ridotte (360×540, JPEG) e salvate
-   in IndexedDB su QUESTO dispositivo. Viaggiano verso altri telefoni solo
-   tramite il backup JSON. In fase 2 andranno nel database / cartella del PC.
-   ========================================================================== */
-window.EN = window.EN || {};
-
-EN.locandine = (function () {
-  var NOME_DB = "elenetflix", STORE = "locandine";
-  var urls = {};      /* id → blob: URL per mostrarle */
-  var blobs = {};     /* id → Blob, per il backup */
-  var ascoltatori = [];
-  var dbPromessa = null;
-  var persistente = true;
-
-  function apriDb() {
-    if (dbPromessa) return dbPromessa;
-    dbPromessa = new Promise(function (ok, ko) {
-      try {
-        var r = indexedDB.open(NOME_DB, 1);
-        r.onupgradeneeded = function () { r.result.createObjectStore(STORE); };
-        r.onsuccess = function () { ok(r.result); };
-        r.onerror = function () { ko(r.error); };
-      } catch (e) { ko(e); }
-    });
-    return dbPromessa;
-  }
-
-  function operazione(modo, fn) {
-    return apriDb().then(function (db) {
-      return new Promise(function (ok, ko) {
-        var t = db.transaction(STORE, modo);
-        var risultato = fn(t.objectStore(STORE));
-        t.oncomplete = function () { ok(risultato && "result" in risultato ? risultato.result : undefined); };
-        t.onerror = function () { ko(t.error); };
-        t.onabort = function () { ko(t.error); };
-      });
-    });
-  }
-
-  function notifica() { ascoltatori.forEach(function (fn) { try { fn(); } catch (e) { console.error(e); } }); }
-
-  function metti(id, blob) {
-    if (urls[id]) URL.revokeObjectURL(urls[id]);
-    blobs[id] = blob;
-    urls[id] = URL.createObjectURL(blob);
-  }
-
-  function togli(id) {
-    if (urls[id]) URL.revokeObjectURL(urls[id]);
-    delete urls[id]; delete blobs[id];
-  }
-
-  /* riduce l'immagine a 2:3 (ritaglio centrale) per un caricamento veloce */
-  function riduci(file) {
-    return new Promise(function (ok, ko) {
-      var img = new Image();
-      var u = URL.createObjectURL(file);
-      img.onload = function () {
-        var W = 360, H = 540;
-        var c = document.createElement("canvas");
-        c.width = W; c.height = H;
-        var x = c.getContext("2d");
-        var s = Math.max(W / img.naturalWidth, H / img.naturalHeight);
-        var w = img.naturalWidth * s, h = img.naturalHeight * s;
-        x.fillStyle = "#000"; x.fillRect(0, 0, W, H);
-        x.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
-        URL.revokeObjectURL(u);
-        c.toBlob(function (b) { b ? ok(b) : ko(new Error("Conversione non riuscita")); }, "image/jpeg", 0.84);
-      };
-      img.onerror = function () { URL.revokeObjectURL(u); ko(new Error("Formato immagine non leggibile")); };
-      img.src = u;
-    });
-  }
-
-  function aDataUrl(blob) {
-    return new Promise(function (ok, ko) {
-      var r = new FileReader();
-      r.onload = function () { ok(String(r.result)); };
-      r.onerror = function () { ko(r.error); };
-      r.readAsDataURL(blob);
-    });
-  }
-
-  function daDataUrl(dataUrl) {
-    var m = /^data:(image\/[a-z+.-]+);base64,(.+)$/i.exec(dataUrl || "");
-    if (!m) return null;
-    var bin = atob(m[2]), arr = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-    return new Blob([arr], { type: m[1] });
-  }
-
-  return {
-    persistente: function () { return persistente; },
-
-    carica: function () {
-      return operazione("readonly", function (s) {
-        var chiavi = s.getAllKeys(), valori = s.getAll();
-        return { get result() { return { chiavi: chiavi.result, valori: valori.result }; } };
-      }).then(function (r) {
-        (r.chiavi || []).forEach(function (k, i) { if (r.valori[i]) metti(k, r.valori[i]); });
-      }).catch(function () { persistente = false; });
-    },
-
-    url: function (id) { return urls[id] || null; },
-    conta: function () { return Object.keys(urls).length; },
-    ascolta: function (fn) { ascoltatori.push(fn); },
-    riduci: riduci,
-
-    imposta: function (id, blob, silenzioso) {
-      metti(id, blob);
-      if (!silenzioso) notifica();
-      if (!persistente) return Promise.resolve();
-      return operazione("readwrite", function (s) { s.put(blob, id); }).catch(function () { persistente = false; });
-    },
-
-    rimuovi: function (id) {
-      togli(id);
-      notifica();
-      if (!persistente) return Promise.resolve();
-      return operazione("readwrite", function (s) { s.delete(id); }).catch(function () {});
-    },
-
-    svuota: function () {
-      Object.keys(urls).forEach(togli);
-      notifica();
-      if (!persistente) return Promise.resolve();
-      return operazione("readwrite", function (s) { s.clear(); }).catch(function () {});
-    },
-
-    /* per il backup: { id: "data:image/jpeg;base64,…" } */
-    esporta: function () {
-      var ids = Object.keys(blobs), out = {};
-      return ids.reduce(function (p, id) {
-        return p.then(function () { return aDataUrl(blobs[id]).then(function (d) { out[id] = d; }); });
-      }, Promise.resolve()).then(function () { return out; });
-    },
-
-    /* più immagini in un colpo: un solo aggiornamento dell'interfaccia alla fine */
-    impostaMolte: function (coppie) {
-      return coppie.reduce(function (p, c) {
-        return p.then(function () { return EN.locandine.imposta(c.id, c.blob, true); });
-      }, Promise.resolve()).then(function () { notifica(); return coppie.length; });
-    },
-
-    importa: function (mappa) {
-      var coppie = [];
-      Object.keys(mappa || {}).forEach(function (id) {
-        var b = daDataUrl(mappa[id]);
-        if (b) coppie.push({ id: id, blob: b });
-      });
-      return EN.locandine.impostaMolte(coppie);
-    }
-  };
 })();
 
 </script>
@@ -2060,15 +1761,14 @@ EN.ui = EN.ui || {};
   function copertina(t, opz) {
     opz = opz || {};
     var p = parti(t);
-    /* priorità: immagine caricata a mano → locandina TMDB → copertina grafica (sempre sotto, come segnaposto) */
-    var manuale = EN.locandine && EN.locandine.url(t.id);
-    var tmdb = !manuale && EN.tmdb && EN.tmdb.url(t, "w500");
+    /* locandina ufficiale TMDB sopra; la copertina grafica resta sotto come segnaposto.
+       Se la locandina è già arrivata in questa pagina, compare subito (niente dissolvenza a ogni aggiornamento). */
+    var tmdb = EN.tmdb && EN.tmdb.url(t, "w500");
     var img = "";
-    if (manuale) {
-      img = '<img class="cv-poster ok" src="' + U.esc(manuale) + '" alt="" decoding="async" onerror="this.remove()">';
-    } else if (tmdb) {
-      img = '<img class="cv-poster" src="' + U.esc(tmdb) + '" srcset="' + U.esc(EN.tmdb.srcset(t)) + '" sizes="' + (opz.grande ? "200px" : "(min-width: 900px) 180px, 34vw") +
-        '" alt="" loading="' + (opz.subito ? "eager" : "lazy") + '" decoding="async" referrerpolicy="no-referrer" onload="this.classList.add(\'ok\');EN.tmdb.segna(true)" onerror="EN.tmdb.segna(false);var n=this.nextElementSibling;if(n)n.remove();this.remove()">';
+    if (tmdb) {
+      var pronta = EN.tmdb.pronta(t);
+      img = '<img class="cv-poster' + (pronta ? " ok subito" : "") + '" data-p="' + U.esc(EN.tmdb.percorso(t)) + '" src="' + U.esc(tmdb) + '" srcset="' + U.esc(EN.tmdb.srcset(t)) + '" sizes="' + (opz.grande ? "200px" : "(min-width: 900px) 180px, 34vw") +
+        '" alt="" loading="' + (opz.subito || pronta ? "eager" : "lazy") + '" decoding="' + (pronta ? "sync" : "async") + '" referrerpolicy="no-referrer" onload="this.classList.add(\'ok\');EN.tmdb.segna(this,true)" onerror="EN.tmdb.segna(this,false);var n=this.nextElementSibling;if(n)n.remove();this.remove()">';
     } else if (t.poster) {
       img = '<img class="cv-poster" src="' + U.esc(t.poster) + '" alt="" loading="lazy" decoding="async" onload="this.classList.add(\'ok\')" onerror="var n=this.nextElementSibling;if(n)n.remove();this.remove()">';
     }
@@ -2263,14 +1963,6 @@ EN.ui.scheda = (function () {
       "</div>";
   }
 
-  function bloccoLocandina(t) {
-    var c = !!EN.locandine.url(t.id);
-    return '<div class="poster-row"><span>' + I("carica") + "Locandina" + (c ? "" : " grafica") + "</span>" +
-      '<span class="poster-actions"><label class="link-btn" for="loc-file">' + (c ? "Cambia" : "Aggiungi dal telefono") + "</label>" +
-      (c ? '<button class="link-btn" data-loc-rimuovi>Rimuovi</button>' : "") +
-      '<input id="loc-file" type="file" accept="image/*" hidden></span></div>';
-  }
-
   function contenuto(t) {
     var p = EN.progressi.di(t.id);
     var cat = EN.catalogo.titoli;
@@ -2294,7 +1986,6 @@ EN.ui.scheda = (function () {
       rt +
       bloccoVoto(t, p) +
       bloccoVisto(t, p) +
-      bloccoLocandina(t) +
       '<nav class="sheet-nav" aria-label="Titoli vicini">' +
       (prec ? '<button data-open="' + prec.id + '">' + I("sx") + "<span>" + prec.n + ". " + U.esc(prec.titolo) + "</span></button>" : "<span></span>") +
       (succ ? '<button data-open="' + succ.id + '"><span>' + succ.n + ". " + U.esc(succ.titolo) + "</span>" + I("dx") + "</button>" : "<span></span>") +
@@ -2387,14 +2078,6 @@ EN.ui.scheda = (function () {
     panel.innerHTML = contenuto(t);
     panel.scrollTop = scroll;
     collegaCuori(panel, t);
-    var file = panel.querySelector("#loc-file");
-    if (file) file.addEventListener("change", function () {
-      var f = file.files && file.files[0];
-      if (!f) return;
-      EN.locandine.riduci(f).then(function (b) { return EN.locandine.imposta(t.id, b); })
-        .then(function () { EN.ui.avviso("Locandina salvata per " + t.titolo); })
-        .catch(function (err) { EN.ui.avviso((err && err.message) || "Immagine non caricata", { errore: true }); });
-    });
   }
 
   function apri(id) {
@@ -2441,7 +2124,6 @@ EN.ui.scheda = (function () {
         return;
       }
       if (e.target.closest("[data-conferma-voto]")) { conferma(t); return; }
-      if (e.target.closest("[data-loc-rimuovi]")) { EN.locandine.rimuovi(t.id); EN.ui.avviso("Locandina rimossa"); return; }
       if (e.target.closest("[data-del-voto]")) {
         var vecchio = EN.progressi.voto(t.id);
         bozza = null;
@@ -2459,8 +2141,6 @@ EN.ui.scheda = (function () {
       if (e.key === "ArrowLeft" && EN.catalogo.titoli[t.n - 2]) apri(EN.catalogo.titoli[t.n - 2].id);
     });
     EN.progressi.ascolta(function () { if (aperto) render(); });
-    EN.locandine.ascolta(function () { if (aperto) render(); });
-    EN.tmdb.ascolta(function () { if (aperto && EN.tmdb.stato().fase !== "in corso") render(); });
   }
 
   return { inizializza: inizializza, apri: apri, chiudi: chiudi, aperto: function () { return aperto; } };
@@ -2735,7 +2415,6 @@ EN.viste.home = (function () {
     var cat = EN.catalogo.titoli;
     var prep = EN.stats.preparatori();
     var finale = EN.stats.finale();
-    var daVedere = prep.filter(function (t) { return !EN.progressi.visto(t.id); });
     var visti = cat.filter(function (t) { return EN.progressi.visto(t.id); });
     var pref = EN.stats.preferiti();
 
@@ -2748,11 +2427,6 @@ EN.viste.home = (function () {
 
     html += EN.ui.fila({ chiave: "tutta", titolo: "🎬 Tutta la maratona", vai: "maratona", stato: "tutti",
       contenuto: prep.map(function (t) { return EN.ui.carta(t, { prossimo: t.id === prossimo.id }); }).join("") + EN.ui.cartaFinale(finale) });
-
-    html += EN.ui.fila({ chiave: "davedere", titolo: "🍿 Ancora da vedere", vai: "maratona", stato: "davedere",
-      contenuto: daVedere.length
-        ? daVedere.map(function (t) { return EN.ui.carta(t, { prossimo: t.id === prossimo.id }); }).join("") + EN.ui.cartaFinale(finale)
-        : EN.ui.vuoto("40 su 40 completati", "Manca solo il gran finale al cinema.") + EN.ui.cartaFinale(finale) });
 
     html += EN.ui.fila({ chiave: "visti", titolo: "✓ Già visti", vai: visti.length ? "visti" : null,
       contenuto: visti.length
@@ -2872,7 +2546,7 @@ EN.viste = EN.viste || {};
     var p = EN.progressi.di(t.id);
     var bloccato = EN.ui.bloccato(t);
     var meta = [t.anno, U.etichettaTipo(t)];
-    return '<li class="item' + (p.visto ? " is-seen" : "") + (t.finale ? " is-finale" : "") + '">' +
+    return '<li class="item' + (p.visto ? " is-seen" : "") + (t.finale ? " is-finale" : "") + '" data-id="' + t.id + '">' +
       '<button class="item-main" data-open="' + t.id + '">' +
       '<span class="item-n num">' + (t.finale ? "★" : t.n) + "</span>" +
       '<span class="item-thumb">' + EN.ui.copertina(t, { decorativa: true }) + "</span>" +
@@ -2887,19 +2561,56 @@ EN.viste = EN.viste || {};
       "</li>";
   }
 
-  function elenco() {
-    var lista = EN.stats.filtra(filtri);
+  function testoConta(lista) {
     var conFinale = lista.some(function (t) { return t.finale; });
     var n = lista.length - (conFinale ? 1 : 0);
     var conta = (n === 1 ? "1 titolo" : n + " titoli") + (conFinale ? " + il gran finale" : "");
     if (!n && conFinale) conta = "Il gran finale";
+    return lista.length ? conta + (filtri.ordine !== "maratona" ? " · ordine alternativo" : " · in ordine di visione") : conta;
+  }
+
+  function elenco(lista) {
+    lista = lista || EN.stats.filtra(filtri);
     if (!lista.length) {
-      return '<p class="result-count" style="margin:0 0 10px">' + conta + "</p>" +
+      return '<p class="result-count" style="margin:0 0 10px">' + testoConta(lista) + "</p>" +
         '<div class="empty"><b>Nessun titolo trovato</b><span>Prova con un\'altra parola o togli qualche filtro.</span>' +
         '<button class="btn btn-line btn-small" data-azzera-filtri>Mostra tutti i titoli</button></div>';
     }
-    return '<p class="result-count" style="margin:0 0 10px">' + conta + (filtri.ordine !== "maratona" ? " · ordine alternativo" : " · in ordine di visione") + "</p>" +
+    return '<p class="result-count" style="margin:0 0 10px">' + testoConta(lista) + "</p>" +
       '<ol class="list">' + lista.map(voceElenco).join("") + "</ol>";
+  }
+
+  /* Aggiornamento sul posto: ogni riga si rifà, ma la copertina (con la locandina già caricata)
+     viene spostata dalla riga vecchia alla nuova, così le immagini non si ricaricano. */
+  function aggiornaElenco(el) {
+    var lista = EN.stats.filtra(filtri);
+    var ol = el.querySelector("ol.list");
+    if (!ol || !lista.length) { el.innerHTML = elenco(lista); return; }
+    var vecchie = {};
+    Array.prototype.forEach.call(ol.children, function (li) { vecchie[li.getAttribute("data-id")] = li; });
+    var attivo = document.activeElement;
+    var fuoco = attivo && ol.contains(attivo) && attivo.hasAttribute("data-toggle-seen") ? attivo.getAttribute("data-toggle-seen") : null;
+    var tpl = document.createElement("template");
+    var dopo = null;
+    lista.forEach(function (t) {
+      tpl.innerHTML = voceElenco(t);
+      var nuova = tpl.content.firstElementChild;
+      var vecchia = vecchie[t.id];
+      if (vecchia) {
+        var cop = vecchia.querySelector(".item-thumb");
+        if (cop) nuova.querySelector(".item-thumb").replaceWith(cop);
+        delete vecchie[t.id];
+        vecchia.replaceWith(nuova);
+      }
+      /* ordine: subito dopo la riga precedente (o in testa) */
+      var rif = dopo ? dopo.nextSibling : ol.firstChild;
+      if (nuova !== rif) ol.insertBefore(nuova, rif);
+      dopo = nuova;
+    });
+    Object.keys(vecchie).forEach(function (id) { vecchie[id].remove(); });
+    var c = el.querySelector(".result-count");
+    if (c) c.textContent = testoConta(lista);
+    if (fuoco) { var b = ol.querySelector('[data-toggle-seen="' + fuoco + '"]'); if (b) b.focus({ preventScroll: true }); }
   }
 
   EN.viste.maratona = {
@@ -2933,7 +2644,7 @@ EN.viste = EN.viste || {};
     },
     aggiorna: function (root) {
       var el = root.querySelector("#m-elenco");
-      if (el) el.innerHTML = elenco();
+      if (el) aggiornaElenco(el);
       var sub = root.querySelector(".page-sub");
       var r = EN.stats.riepilogo();
       if (sub) sub.textContent = r.completati + " / " + r.totale + " completati. Tocca il cerchio a destra per segnare un titolo come visto.";
@@ -3115,7 +2826,6 @@ EN.viste.stats = (function () {
       if (pannello.anteprima) {
         var a = pannello.anteprima;
         extra += '<div class="confirm-box"><span>Nel backup ci sono <b>' + a.visti + "</b> titoli visti, <b>" + a.voti + "</b> voti" +
-          (a.nLocandine ? " e <b>" + a.nLocandine + "</b> locandine" : "") +
           (a.esportatoIl ? " (salvato il " + U.fmtData(a.esportatoIl) + ")" : "") + ". Sostituiscono i dati attuali di questo dispositivo.</span>" +
           '<div class="row-btns"><button class="btn btn-red btn-small" data-conferma-import>Sostituisci i dati</button>' +
           '<button class="btn btn-line btn-small" data-chiudi-pannello>Annulla</button></div></div>';
@@ -3135,115 +2845,13 @@ EN.viste.stats = (function () {
       extra + "</section>";
   }
 
-  /* ---------- locandine caricate dal telefono ---------- */
-  var loc = { inizio: null, anteprima: null, svuota: false, msg: "", err: "", lavoro: false };
-
-  function primoSenza() {
-    var t = EN.catalogo.titoli.filter(function (x) { return !EN.locandine.url(x.id); })[0];
-    return t ? t.n : 1;
-  }
-
-  function locandinePanel() {
-    var cat = EN.catalogo.titoli;
-    var inizio = loc.inizio || primoSenza();
-    var opzioni = cat.map(function (t) {
-      return '<option value="' + t.n + '"' + (t.n === inizio ? " selected" : "") + ">N° " + t.n + " · " + U.esc(t.titolo) + "</option>";
-    }).join("");
-    var extra = "";
-    if (loc.lavoro) extra = '<p class="msg-ok" role="status">Preparo le immagini…</p>';
-    if (loc.anteprima) {
-      extra = '<div class="loc-preview">' + loc.anteprima.map(function (a) {
-        return '<figure><img src="' + a.url + '" alt=""><figcaption><b>N° ' + a.n + "</b> " + U.esc(a.titolo) + "</figcaption></figure>";
-      }).join("") + "</div>" +
-        '<div class="row-btns"><button class="btn btn-red btn-small" data-loc-salva>Salva ' + loc.anteprima.length + (loc.anteprima.length === 1 ? " locandina" : " locandine") + "</button>" +
-        '<button class="btn btn-line btn-small" data-loc-annulla>Annulla</button></div>';
-    }
-    if (loc.svuota) {
-      extra = '<div class="confirm-box"><span>Rimuovere tutte le locandine caricate da questo dispositivo? Tornano le copertine grafiche.</span>' +
-        '<div class="row-btns"><button class="btn btn-red btn-small" data-loc-svuota-ok>Rimuovi tutte</button>' +
-        '<button class="btn btn-line btn-small" data-loc-annulla>Annulla</button></div></div>';
-    }
-    return '<section class="panel" id="locandine" aria-labelledby="loc-h"><h2 id="loc-h">Locandine</h2>' +
-      tmdbBlocco() +
-      '<h3 class="panel-sub">Oppure caricale dal telefono (facoltativo)</h3>' +
-      "<p>Hanno la precedenza su quelle di TMDB. Vengono assegnate nell'ordine in cui le selezioni, a partire dal numero indicato. " +
-      "Per cambiarne una sola, apri la scheda del titolo.</p>" +
-      '<div class="storage-state">' + I("carica") + "<span><b>" + EN.locandine.conta() + " / 41</b> locandine caricate a mano" +
-      (EN.locandine.persistente() ? "" : ". Questo browser non permette di salvarle: spariranno chiudendo la pagina") + ".</span></div>" +
-      '<div class="select" style="max-width:100%"><label class="sr" for="loc-inizio">Assegna a partire da</label>' +
-      '<select id="loc-inizio" style="max-width:100%">' + opzioni + "</select>" + I("giu") + "</div>" +
-      '<div class="row-btns"><label class="btn btn-line btn-small" for="loc-multi" style="cursor:pointer">' + I("carica") + "Scegli immagini</label>" +
-      '<input id="loc-multi" type="file" accept="image/*" multiple hidden>' +
-      (EN.locandine.conta() ? '<button class="btn btn-line btn-small" data-loc-svuota>' + I("cestino") + "Rimuovi tutte</button>" : "") + "</div>" +
-      (loc.err ? '<p class="msg-err" role="alert">' + U.esc(loc.err) + "</p>" : "") +
-      (loc.msg ? '<p class="msg-ok" role="status">' + U.esc(loc.msg) + "</p>" : "") +
-      extra + "</section>";
-  }
-
-  /* ---------- locandine ufficiali da TMDB ---------- */
-  var tm = { msg: "", err: "" };
-
-  function statoTitolo(t) {
-    var l = EN.tmdb.lingua(t);
-    if (EN.tmdb.percorso(t)) return '<span class="ok">✓ ' + (l === "it" ? "italiano" : l === "en" ? "inglese" : l === "fissata" ? "ufficiale" : "senza testo") + "</span>";
-    if (EN.tmdb.cercato(t)) return '<span class="ko">non disponibile su TMDB</span>';
-    return '<span class="dim">da cercare</span>';
-  }
-
-  function tmdbBlocco() {
-    var s = EN.tmdb.stato();
-    var n = EN.tmdb.conta();
-    var head = '<div class="storage-state">' + I("scarica") + "<span><b>" + n + " / 41</b> locandine ufficiali da TMDB" +
-      (s.fase === "in corso" ? " · recupero in corso " + s.fatti + " / " + s.totale + "…" : "") + "</span></div>";
-    var corpo;
-    var avvisoBlocco = EN.tmdb.bloccate()
-      ? '<p class="msg-err" role="status">In questa pagina di claude.ai le immagini esterne sono bloccate: le locandine si vedono aprendo EleNetflix dal sito pubblicato.</p>'
-      : "";
-    if (EN.tmdb.tutteFissate()) {
-      corpo = "<p>Le locandine ufficiali di tutti i 41 titoli sono già collegate al sito: arrivano da TMDB, in italiano quando disponibili. " +
-        "Non serve nessuna chiave.</p>" + avvisoBlocco;
-    } else if (!EN.tmdb.ha()) {
-      corpo = "<p>Le locandine ufficiali arrivano da TMDB (The Movie Database) in automatico, prima in italiano e poi in inglese. " +
-        "Serve una chiave gratuita: si inserisce qui e resta salvata solo su questo telefono, mai nel codice del sito.</p>" +
-        '<label class="tile-label" for="tmdb-chiave">Chiave API TMDB (v3) o token di lettura</label>' +
-        '<input id="tmdb-chiave" class="text-in" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Incolla qui la chiave">' +
-        '<div class="row-btns"><button class="btn btn-red btn-small" data-tmdb-salva>' + I("scarica") + "Salva e recupera le locandine</button></div>" +
-        '<details class="howto"><summary>Come ottenere la chiave dal telefono</summary><ol>' +
-        "<li>Apri themoviedb.org e crea un account gratuito, poi conferma l'email.</li>" +
-        "<li>Dal menu del profilo apri Impostazioni → API.</li>" +
-        "<li>Richiedi una chiave di tipo Developer: uso personale e non commerciale. Come sito puoi indicare l'indirizzo di EleNetflix.</li>" +
-        "<li>Copia la «API Key» (oppure il «token di accesso in lettura») e incollala qui sopra.</li>" +
-        "</ol><p>Le voci del sito di TMDB possono avere nomi leggermente diversi.</p></details>";
-    } else {
-      corpo = "<p>Chiave TMDB salvata su questo dispositivo (" + U.esc(EN.tmdb.chiaveMascherata()) + ").</p>" +
-        '<div class="row-btns">' +
-        '<button class="btn btn-line btn-small" data-tmdb-recupera' + (s.fase === "in corso" ? " disabled" : "") + ">" + I("scarica") + (n ? "Cerca di nuovo" : "Recupera le locandine") + "</button>" +
-        (n ? '<button class="btn btn-line btn-small" data-tmdb-copia>' + I("copia") + "Copia elenco locandine</button>" : "") +
-        '<button class="btn btn-line btn-small" data-tmdb-rimuovi>Rimuovi chiave</button></div>' +
-        (s.errore ? '<p class="msg-err" role="alert">' + U.esc(s.errore) + "</p>" : "") +
-        (s.fase === "fatto" && !s.errore && n ? '<p class="msg-ok" role="status">Locandine aggiornate: ' + n + " su 41.</p>" : "");
-    }
-    var elenco = '<details class="howto"><summary>Controllo titolo per titolo</summary><ol class="tmdb-list">' +
-      EN.catalogo.titoli.map(function (t) { return "<li><b>" + t.n + ".</b> " + U.esc(t.titolo) + " — " + statoTitolo(t) + "</li>"; }).join("") +
-      "</ol></details>";
-    return '<h3 class="panel-sub">Locandine ufficiali (TMDB)</h3>' + head + corpo +
-      (tm.err ? '<p class="msg-err" role="alert">' + U.esc(tm.err) + "</p>" : "") +
-      (tm.msg ? '<p class="msg-ok" role="status">' + U.esc(tm.msg) + "</p>" : "") + elenco;
-  }
-
-  function liberaAnteprima() {
-    if (loc.anteprima) loc.anteprima.forEach(function (a) { URL.revokeObjectURL(a.url); });
-    loc.anteprima = null;
-  }
-
   function render() {
     var r = EN.stats.riepilogo();
     return '<div class="view view-pad enter" data-view="stats"><div class="wrap">' +
       '<header class="page-head"><span class="eyebrow">Maratona</span><h1 class="page-title">Statistiche</h1></header>' +
       '<div style="display:grid;gap:10px">' + conto() + tiles(r) + "</div>" + istogramma(r) +
-      locandinePanel() +
       datiPanel() +
-      '<p class="credits">Locandine: <a href="https://www.themoviedb.org" target="_blank" rel="noopener">TMDB</a>. ' + U.esc(EN.tmdb.attribuzione) + ' Punteggi della critica: Rotten Tomatoes, verificati il 10 ottobre 2026. Senza locandina, ogni titolo mostra una copertina grafica di EleNetflix. ' +
+      '<p class="credits">Locandine: <a href="https://www.themoviedb.org" target="_blank" rel="noopener">TMDB</a>. ' + U.esc(EN.tmdb.attribuzione) + ' Punteggi della critica: Rotten Tomatoes, verificati il 10 ottobre 2026. ' +
       "Progetto personale, non affiliato a Netflix, Marvel, Disney o Sony.</p>" +
       "</div></div>";
   }
@@ -3260,20 +2868,16 @@ EN.viste.stats = (function () {
     root.addEventListener("click", function (e) {
       var b = e.target;
       if (b.closest("[data-esporta]")) {
-        /* come file: voti, visti e locandine. Negli appunti: solo voti e visti (le immagini sono troppo pesanti) */
+        /* voti e titoli visti: come file se la pagina può salvarlo, altrimenti negli appunti */
         var leggero = JSON.stringify(EN.backup.crea(), null, 2);
-        var notaLoc = EN.locandine.conta() ? " Le locandine non sono incluse negli appunti." : "";
         var negliAppunti = function () {
           copia(leggero).then(function (ok) {
-            set({ modo: "esporta", json: leggero, ok: (ok ? "Backup copiato negli appunti: incollalo in una nota o in un messaggio." : "Seleziona il testo qui sotto e copialo.") + notaLoc });
+            set({ modo: "esporta", json: leggero, ok: ok ? "Backup copiato negli appunti: incollalo in una nota o in un messaggio." : "Seleziona il testo qui sotto e copialo." });
           });
         };
         if (downloads) {
-          EN.locandine.esporta().then(function (mappa) {
-            var completo = JSON.stringify(EN.backup.crea(Object.keys(mappa).length ? mappa : null));
-            return downloads.save({ filename: EN.backup.nomeFile(), data: completo });
-          }).then(function () {
-            set({ modo: null, ok: "Backup salvato sul dispositivo" + (EN.locandine.conta() ? ", locandine comprese." : ".") });
+          downloads.save({ filename: EN.backup.nomeFile(), data: leggero }).then(function () {
+            set({ modo: null, ok: "Backup salvato sul dispositivo." });
           }).catch(function (err) {
             if (err && err.code === "declined") { set({ modo: null }); return; }
             negliAppunti();
@@ -3281,42 +2885,6 @@ EN.viste.stats = (function () {
         } else {
           negliAppunti();
         }
-        return;
-      }
-      if (b.closest("[data-tmdb-salva]")) {
-        var k = ((root.querySelector("#tmdb-chiave") || {}).value || "").trim();
-        if (k.length < 20) { tm.err = "La chiave sembra incompleta: copiala di nuovo per intero."; tm.msg = ""; rirendi(); return; }
-        tm.err = ""; tm.msg = "";
-        EN.tmdb.impostaChiave(k);
-        EN.tmdb.risolvi(false);
-        return;
-      }
-      if (b.closest("[data-tmdb-recupera]")) { tm.err = tm.msg = ""; EN.tmdb.risolvi(true); return; }
-      if (b.closest("[data-tmdb-rimuovi]")) { tm.err = ""; tm.msg = "Chiave rimossa da questo dispositivo. Le locandine già trovate restano."; EN.tmdb.impostaChiave(""); return; }
-      if (b.closest("[data-tmdb-copia]")) {
-        var elenco = JSON.stringify({ formato: "elenetflix-locandine-tmdb", locandine: EN.tmdb.esportaElenco() });
-        copia(elenco).then(function (ok) {
-          tm.err = ""; tm.msg = ok ? "Elenco copiato: non contiene la chiave, puoi incollarlo in chat per fissare le locandine nel sito." : "Copia non riuscita su questo dispositivo.";
-          rirendi();
-        });
-        return;
-      }
-      if (b.closest("[data-loc-svuota]")) { liberaAnteprima(); loc.svuota = true; loc.msg = loc.err = ""; rirendi(); return; }
-      if (b.closest("[data-loc-annulla]")) { liberaAnteprima(); loc.svuota = false; loc.msg = loc.err = ""; rirendi(); return; }
-      if (b.closest("[data-loc-svuota-ok]")) {
-        loc.svuota = false;
-        EN.locandine.svuota().then(function () { loc.msg = "Locandine rimosse."; rirendi(); });
-        return;
-      }
-      if (b.closest("[data-loc-salva]")) {
-        var coppie = loc.anteprima.map(function (a) { return { id: a.id, blob: a.blob }; });
-        var n = coppie.length;
-        liberaAnteprima();
-        loc.inizio = null;
-        EN.locandine.impostaMolte(coppie).then(function () {
-          loc.msg = n + (n === 1 ? " locandina salvata." : " locandine salvate.");
-          rirendi();
-        });
         return;
       }
       if (b.closest("[data-copia]")) {
@@ -3339,11 +2907,7 @@ EN.viste.stats = (function () {
       if (b.closest("[data-conferma-import]")) {
         var an = pannello.anteprima;
         EN.progressi.sostituisciTutto(an.stato).then(function () {
-          if (an.locandineTmdb) EN.tmdb.importaElenco(an.locandineTmdb);
-          return an.nLocandine ? EN.locandine.importa(an.locandine) : 0;
-        }).then(function () {
-          set({ modo: null, anteprima: null, incollato: "", ok: "Backup importato: " + an.visti + " visti, " + an.voti + " voti" +
-            (an.nLocandine ? ", " + an.nLocandine + " locandine." : ".") });
+          set({ modo: null, anteprima: null, incollato: "", ok: "Backup importato: " + an.visti + " visti, " + an.voti + " voti." });
         }).catch(function () { set({ errore: "Non sono riuscito a salvare i dati importati." }); });
         return;
       }
@@ -3353,35 +2917,6 @@ EN.viste.stats = (function () {
         }).catch(function () { set({ errore: "Non sono riuscito a cancellare i dati." }); });
       }
     });
-    var inizioSel = root.querySelector("#loc-inizio");
-    if (inizioSel) inizioSel.addEventListener("change", function () { loc.inizio = parseInt(inizioSel.value, 10); });
-    var multi = root.querySelector("#loc-multi");
-    if (multi) multi.addEventListener("change", function () {
-      var files = Array.prototype.slice.call(multi.files || []);
-      if (!files.length) return;
-      var cat = EN.catalogo.titoli;
-      var da = (loc.inizio || primoSenza()) - 1;
-      var scarti = Math.max(0, files.length - (cat.length - da));
-      files = files.slice(0, cat.length - da);
-      liberaAnteprima();
-      loc.svuota = false; loc.msg = ""; loc.err = ""; loc.lavoro = true;
-      rirendi();
-      var out = [];
-      files.reduce(function (p, f, i) {
-        return p.then(function () {
-          return EN.locandine.riduci(f).then(function (blob) {
-            var t = cat[da + i];
-            out.push({ id: t.id, n: t.n, titolo: t.titolo, blob: blob, url: URL.createObjectURL(blob) });
-          }).catch(function () { loc.err = "Un'immagine non era leggibile ed è stata saltata."; });
-        });
-      }, Promise.resolve()).then(function () {
-        loc.lavoro = false;
-        loc.anteprima = out.length ? out : null;
-        if (scarti) loc.err = scarti + (scarti === 1 ? " immagine in più è stata ignorata" : " immagini in più sono state ignorate") + " (oltre il N° 41).";
-        rirendi();
-      });
-    });
-
     var file = root.querySelector("#file-in");
     if (file) file.addEventListener("change", function () {
       var f = file.files && file.files[0];
@@ -3403,8 +2938,6 @@ EN.viste.stats = (function () {
     collega: collega,
     lascia: function () {
       pannello = { modo: null, anteprima: null, errore: "", ok: "", json: "" };
-      liberaAnteprima();
-      loc = { inizio: null, anteprima: null, svuota: false, msg: "", err: "", lavoro: false };
     }
   };
 })();
@@ -3641,7 +3174,6 @@ EN.ui.app = (function () {
       '<button role="menuitem" data-go="voti">' + I("voti") + "Le mie valutazioni</button>" +
       (EN.ui.installa.disponibile() ? '<button role="menuitem" data-installa-mostra>' + I("telefono") + "Installa l'app sul telefono</button>" : "") +
       '<button role="menuitem" data-suono>' + I("play") + "Suono della sigla: " + (EN.ui.sigla.suonoAttivo() ? "acceso" : "spento") + "</button>" +
-      '<button role="menuitem" data-dati="locandine">' + I("carica") + "Locandine</button>" +
       '<button role="menuitem" data-dati="dati">' + I("database") + "Dati e backup</button>" +
       '<button role="menuitem" data-esci>' + I("esci") + "Esci da EleNetflix</button>" +
       '<div class="menu-note">' + U.esc(EN.progressi.adattatore().descrizione) + "</div></div>";
@@ -3724,19 +3256,10 @@ EN.ui.app = (function () {
     EN.ui.scheda.inizializza(document.getElementById("sheet-root"));
     eventi(app);
     EN.progressi.ascolta(suCambio);
-    EN.locandine.ascolta(function () { suCambio(); });
     EN.ui.installa.ascolta(function () { if (vista === "home") suCambio(); });
-    /* durante il recupero aggiorno solo il pannello delle locandine; a fine recupero ridisegno tutto */
-    EN.tmdb.ascolta(function () {
-      var s = EN.tmdb.stato();
-      if (s.fase === "in corso") { if (vista === "stats") suCambio(); return; }
-      suCambio();
-    });
     var iniziale = (location.hash || "").replace("#", "");
     if (iniziale === "davedere") iniziale = "maratona";
     vai(EN.viste[iniziale] ? iniziale : "home");
-    /* locandine TMDB: se c'è la chiave su questo dispositivo, completo in sottofondo quelle mancanti */
-    if (EN.tmdb.ha()) setTimeout(function () { EN.tmdb.risolvi(false); }, 400);
   }
 
   return { avvia: avvia, vai: vai, segnaVisto: segnaVisto };
@@ -3757,12 +3280,9 @@ EN.ui.app = (function () {
   } catch (e) { /* si resta sulle misure prudenti */ }
 
   function parti() {
-    Promise.all([
-      EN.progressi.inizializza(EN.persistenza.attiva()).catch(function () {
-        return EN.progressi.inizializza(EN.persistenza.locale);
-      }),
-      EN.locandine.carica().catch(function () {})
-    ]).then(function () {
+    EN.progressi.inizializza(EN.persistenza.attiva()).catch(function () {
+      return EN.progressi.inizializza(EN.persistenza.locale);
+    }).then(function () {
       if (EN.accesso.giaDentro()) {
         document.getElementById("login-root").hidden = true;
         EN.ui.app.avvia();
